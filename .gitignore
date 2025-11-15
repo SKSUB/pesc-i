@@ -1,0 +1,15 @@
+# Byte-compiled / caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environments (also ignore any local env names)
+myenv/
+.venv/
+.env/
+venv/
+.envrc
+
+# Editor/OS
+.vscode/
+.DS_Store
