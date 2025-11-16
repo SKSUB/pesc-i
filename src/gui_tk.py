@@ -15,7 +15,7 @@ UNICODE_PIECES = {
 class ChessGUI:
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.root.title("Simple Chess - Stockfish")
+        self.root.title("pesc-i Chess GUI")
         self.square_size = 64
         self.board_pixels = self.square_size * 8
         self.margin = 24  # space for coordinates labels

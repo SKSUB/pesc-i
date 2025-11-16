@@ -1,6 +1,6 @@
 # The Unstoppable Force vs. The Immovable Object
 
-![Stockfish vs Stockfish](image.png)
+![Stockfish vs Stockfish](image-1.png)
 
 Welcome to the digital arena where titans clash, where silicon brains compute billions of moves per second, and where the result is... always the same.
 
