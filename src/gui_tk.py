@@ -42,6 +42,7 @@ class ChessGUI:
 
         self.board = chess.Board()
         self.selected_square = None
+        self.suggested_move = None
 
         # Engine (created on demand)
         self.engine = None
@@ -122,6 +123,25 @@ class ChessGUI:
                 color = colors[(rank + file) % 2]
                 self.canvas.create_rectangle(x0, y0, x0 + self.square_size, y0 + self.square_size, fill=color, outline="")
 
+        # Highlight previous move (blue)
+        if self.board.move_stack:
+            last_move = self.board.peek()
+            for sq in [last_move.from_square, last_move.to_square]:
+                file = chess.square_file(sq)
+                rank = chess.square_rank(sq)
+                x0 = self.margin + file * self.square_size
+                y0 = self.margin + (7 - rank) * self.square_size
+                self.canvas.create_rectangle(x0, y0, x0 + self.square_size, y0 + self.square_size, fill="#89CFF0", outline="") # Light blue
+
+        # Highlight suggested move (green)
+        if self.suggested_move:
+            for sq in [self.suggested_move.from_square, self.suggested_move.to_square]:
+                file = chess.square_file(sq)
+                rank = chess.square_rank(sq)
+                x0 = self.margin + file * self.square_size
+                y0 = self.margin + (7 - rank) * self.square_size
+                self.canvas.create_rectangle(x0, y0, x0 + self.square_size, y0 + self.square_size, fill="#90EE90", outline="") # Light green
+
         # draw pieces (with margin offset)
         for square in chess.SQUARES:
             piece = self.board.piece_at(square)
@@ -173,6 +193,7 @@ class ChessGUI:
                 self.board.push(move)
                 self.move_list.insert(tk.END, self.board.peek().uci())
                 self.selected_square = None
+                self.suggested_move = None # Clear suggestion after move
                 self.draw_board()
                 self.root.update()
 
@@ -187,6 +208,7 @@ class ChessGUI:
         self.board.reset()
         self.move_list.delete(0, tk.END)
         self.selected_square = None
+        self.suggested_move = None
         self.draw_board()
 
         mode = self.mode_var.get()
@@ -206,6 +228,7 @@ class ChessGUI:
         if len(self.board.move_stack) >= 1:
             self.board.pop()
         self.move_list.delete(0, tk.END)
+        self.suggested_move = None
         # rebuild move list
         temp = chess.Board()
         for m in self.board.move_stack:
@@ -284,17 +307,20 @@ class ChessGUI:
             info = self.engine.analyse(self.board, limit)
             score = info.get("score")
             pv = info.get("pv", [])
+            if pv:
+                self.suggested_move = pv[0]
+            else:
+                self.suggested_move = None
+            self.draw_board() # Redraw to show suggestion
             # score can be mate or cp
             s_text = str(score) if score is not None else "-"
             self.eval_label.config(text=f"Eval: {s_text}")
             self.pv_label.config(text="PV: " + " ".join([m.uci() for m in pv]) if pv else "PV: -")
         except Exception as e:
-            print("Analyze error:", e)
+            print("Engine analysis error:", e)
 
 def main():
+    """Main function to run the GUI."""
     root = tk.Tk()
     app = ChessGUI(root)
     root.mainloop()
-
-if __name__ == "__main__":
-    main()
