@@ -4,8 +4,9 @@ import chess
 import chess.engine
 import threading
 import time
+import os
 
-STOCKFISH_PATH = "/usr/local/bin/stockfish"
+STOCKFISH_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "stockfish", "stockfish"))
 
 UNICODE_PIECES = {
     'P': '♙', 'N': '♘', 'B': '♗', 'R': '♖', 'Q': '♕', 'K': '♔',

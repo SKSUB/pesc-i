@@ -1,0 +1,17 @@
+# install system packages
+sudo apt update
+sudo apt install -y python3 python3-venv python3-pip python3-tk
+
+git clone this repo
+
+# from project root (../pesc-i)
+python3 -m venv myenv
+source myenv/bin/activate
+pip install python-chess
+
+
+# make bundled Stockfish executable
+chmod +x stockfish/stockfish
+
+# run GUI
+python3 run_gui.py
